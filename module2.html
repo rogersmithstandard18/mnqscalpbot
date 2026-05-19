@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module 02 — Futures Trading Concepts | Angel Martinez</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg: #050a0f; --panel: #0b1520; --border: #1a3a5c; --accent: #00c8ff; --accent2: #ff6b00; --text: #c8d8e8; --dim: #5a7a9a; --white: #e8f4ff; --green: #00ff88; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'Barlow', sans-serif; font-weight: 300; line-height: 1.7; overflow-x: hidden; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(0,200,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,200,255,0.03) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; z-index: 0; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1rem 2rem; background: rgba(5,10,15,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+    .nav-logo { font-family: 'Rajdhani', sans-serif; font-size: 1rem; font-weight: 700; color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { font-family: 'Share Tech Mono', monospace; font-size: 0.72rem; color: var(--dim); text-decoration: none; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+    .page-hero { position: relative; z-index: 1; padding: 8rem 2rem 4rem; max-width: 1100px; margin: 0 auto; border-bottom: 1px solid var(--border); }
+    .breadcrumb { font-family: 'Share Tech Mono', monospace; font-size: 0.68rem; color: var(--dim); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1rem; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb span { margin: 0 0.5rem; }
+    .module-tag { display: inline-block; font-family: 'Share Tech Mono', monospace; font-size: 0.68rem; color: var(--accent2); border: 1px solid var(--accent2); padding: 0.25rem 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1rem; }
+    .page-hero h1 { font-family: 'Rajdhani', sans-serif; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700; color: var(--white); line-height: 1.1; margin-bottom: 1rem; }
+    .page-hero h1 span { color: var(--accent); }
+    .page-hero p { max-width: 680px; font-size: 1rem; color: var(--text); }
+    .hero-meta { display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap; }
+    .meta-item { font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; color: var(--dim); letter-spacing: 0.1em; }
+    .meta-item span { color: var(--accent); }
+    main { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+    .content-layout { display: grid; grid-template-columns: 240px 1fr; gap: 3rem; align-items: start; }
+    @media (max-width: 768px) { .content-layout { grid-template-columns: 1fr; } }
+    .sidebar { position: sticky; top: 5rem; }
+    .sidebar-title { font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 0.15rem; }
+    .toc-list a { font-family: 'Share Tech Mono', monospace; font-size: 0.72rem; color: var(--dim); text-decoration: none; padding: 0.4rem 0.75rem; display: block; border-left: 2px solid transparent; transition: all 0.2s; letter-spacing: 0.05em; }
+    .toc-list a:hover { color: var(--accent); border-left-color: var(--accent); background: rgba(0,200,255,0.04); }
+    .module-nav { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+    .mod-link { font-family: 'Share Tech Mono', monospace; font-size: 0.68rem; color: var(--dim); text-decoration: none; padding: 0.5rem 0.75rem; border: 1px solid transparent; transition: all 0.2s; letter-spacing: 0.05em; }
+    .mod-link:hover { border-color: var(--border); color: var(--text); }
+    .mod-link.current { border-color: var(--accent); color: var(--accent); background: rgba(0,200,255,0.06); }
+    .content-block { margin-bottom: 3.5rem; }
+    .block-label { font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; color: var(--accent); letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .content-block h2 { font-family: 'Rajdhani', sans-serif; font-size: 1.6rem; font-weight: 700; color: var(--white); margin-bottom: 1rem; line-height: 1.2; }
+    .content-block h3 { font-family: 'Rajdhani', sans-serif; font-size: 1.1rem; font-weight: 600; color: var(--accent); margin: 1.5rem 0 0.5rem; }
+    .content-block p { margin-bottom: 0.85rem; font-size: 0.95rem; }
+    .content-block ul { padding-left: 1.25rem; margin-bottom: 0.85rem; }
+    .content-block ul li { font-size: 0.9rem; margin-bottom: 0.4rem; }
+    .info-box { border: 1px solid var(--border); background: var(--panel); padding: 1.25rem 1.5rem; margin: 1.25rem 0; display: flex; gap: 1rem; }
+    .info-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .info-box p { margin: 0; font-size: 0.88rem; }
+    .info-box.tip { border-left: 3px solid var(--green); }
+    .info-box.warn { border-left: 3px solid var(--accent2); }
+    .info-box.note { border-left: 3px solid var(--accent); }
+    .spec-table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; }
+    .spec-table th { font-family: 'Share Tech Mono', monospace; font-size: 0.68rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; text-align: left; padding: 0.75rem 1rem; background: var(--panel); border-bottom: 2px solid var(--border); }
+    .spec-table td { font-size: 0.88rem; padding: 0.65rem 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .spec-table tr:last-child td { border-bottom: none; }
+    .spec-table .highlight { color: var(--accent); font-family: 'Share Tech Mono', monospace; font-size: 0.82rem; }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+    footer { position: relative; z-index: 1; border-top: 1px solid var(--border); padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    footer p { font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; color: var(--dim); letter-spacing: 0.1em; }
+    .footer-badge { font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; color: var(--accent); border: 1px solid var(--border); padding: 0.3rem 0.75rem; letter-spacing: 0.1em; }
+    @media (max-width: 600px) { .nav-links { display: none; } }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">AM // NinjaTrader Dev</a>
+  <ul class="nav-links">
+    <li><a href="index.html#services">Services</a></li>
+    <li><a href="index.html#education" class="active">Education</a></li>
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="breadcrumb"><a href="index.html">Home</a><span>//</span><a href="index.html#education">Education</a><span>//</span>Module 02</div>
+  <div class="module-tag">// Module 02</div>
+  <h1>Futures <span>Trading Concepts</span></h1>
+  <p>Essential knowledge for trading MES and MNQ micro futures contracts. Understand contract specs, margin requirements, session hours, order flow, risk sizing, and the true cost of commissions on scalping strategies.</p>
+  <div class="hero-meta">
+    <div class="meta-item">LEVEL: <span>Beginner</span></div>
+    <div class="meta-item">FOCUS: <span>MES &amp; MNQ Micro Futures</span></div>
+    <div class="meta-item">EXCHANGE: <span>CME Group</span></div>
+  </div>
+</div>
+
+<main>
+  <div class="content-layout">
+    <aside class="sidebar">
+      <div class="sidebar-title">// On This Page</div>
+      <ul class="toc-list">
+        <li><a href="#specs">Contract Specifications</a></li>
+        <li><a href="#sessions">Session Hours</a></li>
+        <li><a href="#orderflow">Order Flow &amp; Structure</a></li>
+        <li><a href="#risk">Risk Sizing</a></li>
+        <li><a href="#commissions">Commission Impact</a></li>
+      </ul>
+      <div class="sidebar-title" style="margin-top:2rem;">// All Modules</div>
+      <div class="module-nav">
+        <a href="module1.html" class="mod-link">01 — NinjaScript Fundamentals</a>
+        <a href="module2.html" class="mod-link current">02 — Futures Trading Concepts</a>
+        <a href="module3.html" class="mod-link">03 — Strategy Backtesting</a>
+        <a href="module4.html" class="mod-link">04 — Multi-Bot Portfolio Design</a>
+        <a href="module5.html" class="mod-link">05 — Deployment &amp; Live Trading</a>
+        <a href="module6.html" class="mod-link">06 — NinjaScript Debugging</a>
+      </div>
+    </aside>
+
+    <div class="content">
+
+      <div class="content-block" id="specs">
+        <div class="block-label">// 02.01</div>
+        <h2>Contract Specifications: MES &amp; MNQ</h2>
+        <p>Micro E-mini futures are 1/10th the size of standard E-mini contracts, making them ideal for algorithmic strategy development and smaller accounts without sacrificing real-market exposure.</p>
+        <table class="spec-table">
+          <thead><tr><th>Spec</th><th>MES (Micro S&amp;P 500)</th><th>MNQ (Micro Nasdaq-100)</th></tr></thead>
+          <tbody>
+            <tr><td>Full Name</td><td>Micro E-mini S&amp;P 500</td><td>Micro E-mini Nasdaq-100</td></tr>
+            <tr><td>Multiplier</td><td class="highlight">$5 per point</td><td class="highlight">$2 per point</td></tr>
+            <tr><td>Tick Size</td><td class="highlight">0.25 points = $1.25/tick</td><td class="highlight">0.25 points = $0.50/tick</td></tr>
+            <tr><td>Day Margin (approx)</td><td>~$40–$50 per contract</td><td>~$50–$60 per contract</td></tr>
+            <tr><td>Overnight Margin</td><td>~$1,320 per contract</td><td>~$1,980 per contract</td></tr>
+            <tr><td>Trading Hours</td><td>Sun–Fri 5pm–4pm CT</td><td>Sun–Fri 5pm–4pm CT</td></tr>
+            <tr><td>Settlement</td><td>Cash settled</td><td>Cash settled</td></tr>
+          </tbody>
+        </table>
+        <div class="info-box note"><div class="info-icon">💡</div><p>Intraday margin requirements vary by broker and can be as low as $40/contract with some discount futures brokers. Always confirm with your specific broker before sizing positions.</p></div>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="content-block" id="sessions">
+        <div class="block-label">// 02.02</div>
+        <h2>Session Hours &amp; Market Structure</h2>
+        <p>Automated strategies must respect session filters to avoid trading in low-liquidity overnight gaps. The most reliable automated trading windows on MES/MNQ are:</p>
+        <table class="spec-table">
+          <thead><tr><th>Session</th><th>Time (CT)</th><th>Characteristics</th></tr></thead>
+          <tbody>
+            <tr><td>Pre-Market</td><td>7:00 AM – 9:30 AM</td><td>Building volume, news-driven moves</td></tr>
+            <tr><td>NY Open</td><td class="highlight">9:30 AM – 11:00 AM</td><td>Highest volume, widest range, ideal for momentum strategies</td></tr>
+            <tr><td>Midday Lull</td><td>11:00 AM – 1:00 PM</td><td>Low volume, choppy — avoid scalping</td></tr>
+            <tr><td>Afternoon Session</td><td class="highlight">1:00 PM – 3:00 PM</td><td>Secondary volume window, trending behavior</td></tr>
+            <tr><td>Close</td><td>3:00 PM – 4:00 PM</td><td>Closing imbalances, final directional push</td></tr>
+            <tr><td>Overnight</td><td>4:00 PM – 9:30 AM</td><td>Thin liquidity, wider spreads — avoid unless strategy is specifically designed for it</td></tr>
+          </tbody>
+        </table>
+        <div class="info-box warn"><div class="info-icon">⚠️</div><p><strong>Strategy Filter:</strong> Always add a session filter in your NinjaScript. Trading the overnight session with a scalping strategy designed for the NY open will dramatically reduce performance.</p></div>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="content-block" id="orderflow">
+        <div class="block-label">// 02.03</div>
+        <h2>Reading Order Flow &amp; Market Structure</h2>
+        <p>While automated strategies use technical signals, understanding the underlying market mechanics improves your signal design and helps you avoid common failure modes.</p>
+        <h3>Key Concepts</h3>
+        <ul>
+          <li><strong>Delta:</strong> Net difference between buy and sell volume at each price level. Positive delta = buying pressure. Negative delta = selling pressure.</li>
+          <li><strong>Imbalance:</strong> A significant mismatch between bids and offers at a price level, often predictive of short-term directional movement.</li>
+          <li><strong>Point of Control (POC):</strong> The price level with the highest traded volume in a given session — acts as a magnet for price.</li>
+          <li><strong>Value Area:</strong> The range where ~70% of volume traded. Price outside value area often reverts back — useful for mean-reversion strategies.</li>
+          <li><strong>Market Profile:</strong> Distribution of volume by price over time. D-shaped profile = balanced/rotational market. B or P shape = trending market.</li>
+        </ul>
+        <div class="info-box tip"><div class="info-icon">✅</div><p>You don't need to trade manually with order flow to benefit from these concepts. Understanding delta and value area helps you design better entry filters for automated strategies — particularly for mean-reversion bots.</p></div>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="content-block" id="risk">
+        <div class="block-label">// 02.04</div>
+        <h2>Risk Sizing for Micro Futures Accounts</h2>
+        <p>Position sizing is the single most important factor in automated trading survival. The standard rule: <strong>risk no more than 1–2% of account equity per trade.</strong></p>
+        <h3>Example: $5,000 Account</h3>
+        <table class="spec-table">
+          <thead><tr><th>Parameter</th><th>MES Example</th><th>MNQ Example</th></tr></thead>
+          <tbody>
+            <tr><td>Account Size</td><td>$5,000</td><td>$5,000</td></tr>
+            <tr><td>Risk Per Trade (1%)</td><td class="highlight">$50</td><td class="highlight">$50</td></tr>
+            <tr><td>Stop Loss</td><td>20 ticks</td><td>20 ticks</td></tr>
+            <tr><td>Tick Value</td><td>$1.25/tick</td><td>$0.50/tick</td></tr>
+            <tr><td>Risk Per Contract at Stop</td><td>$25.00</td><td>$10.00</td></tr>
+            <tr><td>Max Contracts</td><td class="highlight">2 contracts</td><td class="highlight">5 contracts</td></tr>
+          </tbody>
+        </table>
+        <div class="info-box warn"><div class="info-icon">⚠️</div><p><strong>Never risk more than 2% per trade.</strong> At 2% risk with a 50% win rate and 1:1.5 R:R, your account survives a 20-trade losing streak and still has 60%+ of capital. Exceeding this threshold is the #1 account killer in automated scalping.</p></div>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="content-block" id="commissions">
+        <div class="block-label">// 02.05</div>
+        <h2>Commission Impact on Scalping Strategies</h2>
+        <p>Commissions are a silent killer of scalping strategies. A backtest ignoring commissions can show a strategy is profitable, when in live trading it's a net loser.</p>
+        <h3>Typical Commission Costs (Round-Turn)</h3>
+        <table class="spec-table">
+          <thead><tr><th>Broker Type</th><th>Per Side</th><th>Round Turn</th><th>MES Tick Equivalent</th><th>MNQ Tick Equivalent</th></tr></thead>
+          <tbody>
+            <tr><td>Discount Futures Broker</td><td>$0.25–$0.50</td><td class="highlight">$0.50–$1.00</td><td>0.4–0.8 ticks</td><td>1.0–2.0 ticks</td></tr>
+            <tr><td>Standard Broker</td><td>$1.00–$2.00</td><td class="highlight">$2.00–$4.00</td><td>1.6–3.2 ticks</td><td>4.0–8.0 ticks</td></tr>
+          </tbody>
+        </table>
+        <div class="info-box warn"><div class="info-icon">⚠️</div><p><strong>Always enable commissions in Strategy Analyzer.</strong> Set realistic per-side values matching your broker. A scalping strategy targeting 6–8 ticks with a $4.00 round-turn commission is consuming 50–67% of each winner in fees on MNQ.</p></div>
+        <div class="info-box tip"><div class="info-icon">✅</div><p><strong>Rule of thumb:</strong> Your average winner should be at least 3–4× the round-turn commission. On MNQ at $1.00 round-turn, aim for at minimum 6–8 tick average wins.</p></div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<footer>
+  <p>© 2026 Angel Martinez | NinjaTrader Independent Developer | Phoenix, AZ</p>
+  <div class="footer-badge">MODULE 02 / 06</div>
+</footer>
+</body>
+</html>
