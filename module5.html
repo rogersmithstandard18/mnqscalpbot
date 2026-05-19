@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module 05 — Deployment &amp; Live Trading | Angel Martinez</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg: #050a0f; --panel: #0b1520; --border: #1a3a5c; --accent: #00c8ff; --accent2: #ff6b00; --text: #c8d8e8; --dim: #5a7a9a; --white: #e8f4ff; --green: #00ff88; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'Barlow', sans-serif; font-weight: 300; line-height: 1.7; overflow-x: hidden; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(0,200,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,200,255,0.03) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; z-index: 0; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1rem 2rem; background: rgba(5,10,15,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+    .nav-logo { font-family: 'Rajdhani', sans-serif; font-size: 1rem; font-weight: 700; color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { font-family: 'Share Tech Mono', monospace; font-size: 0.72rem; color: var(--dim); text-decoration: none; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+    .page-hero { position: relative; z-index: 1; padding: 8rem 2rem 4rem; max-width: 1100px; margin: 0 auto; border-bottom: 1px solid var(--border); }
+    .breadcrumb { font-family: 'Share Tech Mono', monospace; font-size: 0.68rem; color: var(--dim); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1rem; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb span { margin: 0 0.5rem; }
+    .module-tag { display: inline-block; font-family: 'Share Tech Mono', monospace; font-size: 0.68rem; color: var(--accent2); border: 1px solid var(--accent2); padding: 0.25rem 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1rem; }
+    .page-hero h1 { font-family: 'Rajdhani', sans-serif; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700; color: var(--white); line-height: 1.1; margin-bottom: 1rem; }
+    .page-hero h1 span { color: var(--accent); }
+    .page-hero p { max-width: 680px; font-size: 1rem; }
+    .hero-meta { display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap; }
+    .meta-item { font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; color: var(--dim); letter-spacing: 0.1em; }
+    .meta-item span { color: var(--accent); }
+    main { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+    .content-layout { display: grid; grid-template-columns: 240px 1fr; gap: 3rem; align-items: start; }
+    @media (max-width: 768px) { .content-layout { grid-template-columns: 1fr; } }
+    .sidebar { position: sticky; top: 5rem; }
+    .sidebar-title { font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 0.15rem; }
+    .toc-list a { font-family: 'Share Tech Mono', monospace; font-size: 0.72rem; color: var(--dim); text-decoration: none; padding: 0.4rem 0.75rem; display: block; border-left: 2px solid transparent; transition: all 0.2s; letter-spacing: 0.05em; }
+    .toc-list a:hover { color: var(--accent); border-left-color: var(--accent); background: rgba(0,200,255,0.04); }
+    .module-nav { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+    .mod-link { font-family: 'Share Tech Mono', monospace; font-size: 0.68rem; color: var(--dim); text-decoration: none; padding: 0.5rem 0.75rem; border: 1px solid transparent; transition: all 0.2s; letter-spacing: 0.05em; }
+    .mod-link:hover { border-color: var(--border); color: var(--text); }
+    .mod-link.current { border-color: var(--accent); color: var(--accent); background: rgba(0,200,255,0.06); }
+    .content-block { margin-bottom: 3.5rem; }
+    .block-label { font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; color: var(--accent); letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .content-block h2 { font-family: 'Rajdhani', sans-serif; font-size: 1.6rem; font-weight: 700; color: var(--white); margin-bottom: 1rem; }
+    .content-block h3 { font-family: 'Rajdhani', sans-serif; font-size: 1.1rem; font-weight: 600; color: var(--accent); margin: 1.5rem 0 0.5rem; }
+    .content-block p { margin-bottom: 0.85rem; font-size: 0.95rem; }
+    .content-block ul, .content-block ol { padding-left: 1.25rem; margin-bottom: 0.85rem; }
+    .content-block ul li, .content-block ol li { font-size: 0.9rem; margin-bottom: 0.4rem; }
+    .info-box { border: 1px solid var(--border); background: var(--panel); padding: 1.25rem 1.5rem; margin: 1.25rem 0; display: flex; gap: 1rem; }
+    .info-icon { font-size: 1.1rem; flex-shrink: 0; }
+    .info-box p { margin: 0; font-size: 0.88rem; }
+    .info-box.tip { border-left: 3px solid var(--green); }
+    .info-box.warn { border-left: 3px solid var(--accent2); }
+    .info-box.note { border-left: 3px solid var(--accent); }
+    .code-block { background: #060e16; border: 1px solid var(--border); border-left: 3px solid var(--accent); padding: 1.5rem; margin: 1.25rem 0; overflow-x: auto; }
+    .code-block pre { font-family: 'Share Tech Mono', monospace; font-size: 0.8rem; color: var(--text); line-height: 1.7; white-space: pre; }
+    .code-comment { color: var(--dim); }
+    .step-list { display: flex; flex-direction: column; gap: 1rem; margin: 1.25rem 0; }
+    .step { display: flex; gap: 1.25rem; align-items: flex-start; }
+    .step-num { font-family: 'Share Tech Mono', monospace; font-size: 0.75rem; color: var(--accent); border: 1px solid var(--accent); min-width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; letter-spacing: 0.05em; }
+    .step-content h4 { font-family: 'Rajdhani', sans-serif; font-size: 1rem; font-weight: 600; color: var(--white); margin-bottom: 0.25rem; }
+    .step-content p { font-size: 0.88rem; color: var(--dim); margin: 0; }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+    footer { position: relative; z-index: 1; border-top: 1px solid var(--border); padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    footer p { font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; color: var(--dim); letter-spacing: 0.1em; }
+    .footer-badge { font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; color: var(--accent); border: 1px solid var(--border); padding: 0.3rem 0.75rem; letter-spacing: 0.1em; }
+    @media (max-width: 600px) { .nav-links { display: none; } }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">AM // NinjaTrader Dev</a>
+  <ul class="nav-links">
+    <li><a href="index.html#services">Services</a></li>
+    <li><a href="index.html#education" class="active">Education</a></li>
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="breadcrumb"><a href="index.html">Home</a><span>//</span><a href="index.html#education">Education</a><span>//</span>Module 05</div>
+  <div class="module-tag">// Module 05</div>
+  <h1>Deployment &amp; <span>Live Trading</span></h1>
+  <p>Getting strategies from development to live market execution safely. Instrument configuration, simulated vs live mode, common deployment errors, and real-time monitoring best practices for automated NinjaTrader strategies.</p>
+  <div class="hero-meta">
+    <div class="meta-item">LEVEL: <span>Intermediate</span></div>
+    <div class="meta-item">FOCUS: <span>Live Deployment</span></div>
+    <div class="meta-item">PLATFORM: <span>NinjaTrader 8</span></div>
+  </div>
+</div>
+
+<main>
+  <div class="content-layout">
+    <aside class="sidebar">
+      <div class="sidebar-title">// On This Page</div>
+      <ul class="toc-list">
+        <li><a href="#install">Strategy Installation</a></li>
+        <li><a href="#instrument">Instrument Config</a></li>
+        <li><a href="#simvslive">Sim vs Live Mode</a></li>
+        <li><a href="#errors">Common Deploy Errors</a></li>
+        <li><a href="#monitoring">Monitoring Best Practices</a></li>
+      </ul>
+      <div class="sidebar-title" style="margin-top:2rem;">// All Modules</div>
+      <div class="module-nav">
+        <a href="module1.html" class="mod-link">01 — NinjaScript Fundamentals</a>
+        <a href="module2.html" class="mod-link">02 — Futures Trading Concepts</a>
+        <a href="module3.html" class="mod-link">03 — Strategy Backtesting</a>
+        <a href="module4.html" class="mod-link">04 — Multi-Bot Portfolio Design</a>
+        <a href="module5.html" class="mod-link current">05 — Deployment &amp; Live Trading</a>
+        <a href="module6.html" class="mod-link">06 — NinjaScript Debugging</a>
+      </div>
+    </aside>
+
+    <div class="content">
+
+      <div class="content-block" id="install">
+        <div class="block-label">// 05.01</div>
+        <h2>Strategy Installation in NinjaTrader</h2>
+        <p>NinjaTrader strategies are distributed as <strong>.cs source files</strong> or compiled <strong>.dll assemblies</strong>. Source files require compilation inside NinjaTrader; DLLs are pre-compiled and load directly.</p>
+        <h3>Installing from Source (.cs File)</h3>
+        <div class="step-list">
+          <div class="step"><div class="step-num">01</div><div class="step-content"><h4>Open NinjaScript Editor</h4><p>Tools → NinjaScript Editor (or F12). This opens the Visual Studio-style code editor.</p></div></div>
+          <div class="step"><div class="step-num">02</div><div class="step-content"><h4>Navigate to Strategies Folder</h4><p>In the file tree: NinjaTrader 8 → Custom → Strategies. This is where .cs files must be placed.</p></div></div>
+          <div class="step"><div class="step-num">03</div><div class="step-content"><h4>Place the .cs File</h4><p>Copy or drag the strategy .cs file into: <code>Documents\NinjaTrader 8\bin\Custom\Strategies\</code></p></div></div>
+          <div class="step"><div class="step-num">04</div><div class="step-content"><h4>Compile</h4><p>In NinjaScript Editor: click the Compile button (F5) or right-click → Compile. Watch the Output window for errors.</p></div></div>
+          <div class="step"><div class="step-num">05</div><div class="step-content"><h4>Verify in Strategy List</h4><p>Open a chart → Strategies tab → the compiled strategy should appear in the list.</p></div></div>
+        </div>
+        <div class="info-box warn"><div class="info-icon">⚠️</div><p><strong>Folder placement is the #1 deployment error.</strong> If a .cs file is placed outside the correct directory path, NinjaTrader will not find it even after compilation. Always use <code>Documents\NinjaTrader 8\bin\Custom\Strategies\</code>.</p></div>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="content-block" id="instrument">
+        <div class="block-label">// 05.02</div>
+        <h2>Instrument &amp; Data Feed Configuration</h2>
+        <p>Incorrect instrument configuration is one of the most common causes of strategies that compile correctly but behave unexpectedly in live trading.</p>
+        <h3>Critical Settings to Verify</h3>
+        <ul>
+          <li><strong>Instrument Name:</strong> Must exactly match what your data provider supplies. MNQ vs MNQ 03-25 vs MNQ1! — these are different instruments.</li>
+          <li><strong>Data Provider:</strong> Ensure your chart's data feed matches your brokerage connection. Rithmic and Continuum feeds have different instrument naming.</li>
+          <li><strong>Session Template:</strong> Set to CME US Index Futures ETH or RTH depending on your intended trading hours.</li>
+          <li><strong>Tick Size:</strong> Verify TickSize in the instrument definition matches what your strategy assumes (0.25 for MES/MNQ).</li>
+          <li><strong>Contract Month / Rollover:</strong> Confirm you are on the front-month contract. Stale back-month data causes fill and pricing issues.</li>
+        </ul>
+        <div class="code-block"><pre><span class="code-comment">// In OnStateChange SetDefaults — explicit instrument validation</span>
+<span class="code-comment">// Add this to catch mismatched instrument configuration at startup</span>
+<span class="code-keyword">if</span> (State == State.DataLoaded)
+{
+    <span class="code-keyword">if</span> (TickSize != <span class="code-string">0.25</span>)
+    {
+        <span class="code-keyword">throw new</span> InvalidOperationException(
+            <span class="code-string">"TickSize mismatch. Expected 0.25. Check instrument settings."</span>
+        );
+    }
+}</pre></div>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="content-block" id="simvslive">
+        <div class="block-label">// 05.03</div>
+        <h2>Simulated vs Live Trading Mode</h2>
+        <p>Always run new strategies in Simulated mode for a minimum of 1–2 weeks before switching to Live. Sim mode uses real market data with paper money — it's the closest approximation to live trading without financial risk.</p>
+        <h3>Enabling a Strategy on a Chart</h3>
+        <div class="step-list">
+          <div class="step"><div class="step-num">01</div><div class="step-content"><h4>Right-click chart → Strategies</h4><p>Opens the strategy management panel for that chart.</p></div></div>
+          <div class="step"><div class="step-num">02</div><div class="step-content"><h4>Click Add</h4><p>Select your compiled strategy from the dropdown list.</p></div></div>
+          <div class="step"><div class="step-num">03</div><div class="step-content"><h4>Configure Parameters</h4><p>Set all input parameters — lot size, stop loss, profit target, session filter — in the properties panel.</p></div></div>
+          <div class="step"><div class="step-num">04</div><div class="step-content"><h4>Select Account</h4><p>Choose <strong>Sim101</strong> (simulated account) for paper trading. Choose your live brokerage account for live trading.</p></div></div>
+          <div class="step"><div class="step-num">05</div><div class="step-content"><h4>Enable the Strategy</h4><p>Toggle the strategy to <strong>Enabled</strong>. Monitor the first few trades for correct behavior.</p></div></div>
+        </div>
+        <div class="info-box note"><div class="info-icon">💡</div><p>Sim mode fills are not identical to live fills — they assume perfect execution at signal price. Slippage in live trading will slightly reduce performance vs sim results. Factor in 1–2 ticks of slippage when evaluating sim period performance.</p></div>
+        <h3>Sim → Live Transition Checklist</h3>
+        <ul>
+          <li>Strategy ran profitably in sim for minimum 2 weeks across multiple market conditions</li>
+          <li>No unexpected position states observed (stuck positions, double entries)</li>
+          <li>Session filters confirmed working — no overnight trades if not intended</li>
+          <li>Daily loss limit triggers confirmed working</li>
+          <li>Start live with minimum contract size (1 contract) regardless of account size</li>
+        </ul>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="content-block" id="errors">
+        <div class="block-label">// 05.04</div>
+        <h2>Common Deployment Errors &amp; Fixes</h2>
+        <ul>
+          <li><strong>Strategy not appearing in list after compilation:</strong> File placed in wrong directory. Move .cs file to <code>Documents\NinjaTrader 8\bin\Custom\Strategies\</code> and recompile.</li>
+          <li><strong>Compile error — namespace not found:</strong> Missing <code>using</code> directives at top of file. Ensure all required NinjaTrader namespaces are included.</li>
+          <li><strong>Strategy loads but no trades execute:</strong> Check session filter — strategy may be outside its allowed trading window. Check the Output window for any exception messages.</li>
+          <li><strong>Orders placed but not filled in sim:</strong> Limit orders in sim mode require price to trade through (not just touch) the limit level. Switch to market orders for testing order flow.</li>
+          <li><strong>Instrument mismatch error at startup:</strong> Strategy was designed for MNQ but is running on MES chart (or vice versa). Reattach to the correct instrument chart.</li>
+          <li><strong>Data feed disconnect mid-session:</strong> Strategy may continue running with stale data. Always configure NinjaTrader alerts for connection status changes.</li>
+          <li><strong>Position stuck open at end of session:</strong> Exit logic not triggering. Check if ExitLong/ExitShort signal names match entry signal names exactly.</li>
+        </ul>
+        <div class="info-box tip"><div class="info-icon">✅</div><p>The <strong>Output Window</strong> (View → Output Window) is your first diagnostic tool. Any strategy exception, warning, or <code>Print()</code> statement appears here. Check it immediately after enabling a strategy.</p></div>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="content-block" id="monitoring">
+        <div class="block-label">// 05.05</div>
+        <h2>Real-Time Monitoring Best Practices</h2>
+        <p>Automated doesn't mean hands-off. Effective monitoring catches issues before they compound into significant losses.</p>
+        <h3>NinjaTrader Alert Configuration</h3>
+        <ul>
+          <li>Set email alerts for strategy enable/disable state changes</li>
+          <li>Configure alerts for connection status changes on your data feed</li>
+          <li>Use <code>Alert()</code> calls within NinjaScript to trigger alerts on unusual conditions</li>
+        </ul>
+        <h3>End-of-Day Review Routine</h3>
+        <ul>
+          <li>Review all trades in the Trade Performance tab</li>
+          <li>Compare actual fills vs expected signal prices — monitor slippage trends</li>
+          <li>Log daily P&amp;L and running drawdown in a spreadsheet</li>
+          <li>Note any market conditions that seemed to cause unusual behavior</li>
+          <li>Check for any error messages in the NinjaTrader log file</li>
+        </ul>
+        <div class="info-box warn"><div class="info-icon">⚠️</div><p>Never leave automated strategies running unmonitored on a live account during high-impact economic data releases (FOMC, CPI, NFP). Slippage during news events can be 10–50× normal — most scalping strategies should be paused or have reduced size during these windows.</p></div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<footer>
+  <p>© 2026 Angel Martinez | NinjaTrader Independent Developer | Phoenix, AZ</p>
+  <div class="footer-badge">MODULE 05 / 06</div>
+</footer>
+</body>
+</html>
